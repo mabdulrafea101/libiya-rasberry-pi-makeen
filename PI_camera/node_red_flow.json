@@ -1,0 +1,213 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Bottle Classification",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "3cc11d24.ff01a2",
+        "type": "mqtt in",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "topic": "bottle/classification",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "77d1f629.81a708",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 170,
+        "y": 120,
+        "wires": [
+            [
+                "json_parser"
+            ]
+        ]
+    },
+    {
+        "id": "d4b2a1f1.123456",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "Classification Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 420,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "trigger_btn",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "Trigger Capture",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "bottle/command",
+        "payload": "start",
+        "payloadType": "str",
+        "x": 170,
+        "y": 200,
+        "wires": [
+            [
+                "mqtt_out_cmd"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt_out_cmd",
+        "type": "mqtt out",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "topic": "bottle/command",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "77d1f629.81a708",
+        "x": 400,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "77d1f629.81a708",
+        "type": "mqtt-broker",
+        "name": "HiveMQ Cloud",
+        "broker": "00abc31a42b94a7ea56216cf0b5b956d.s1.eu.hivemq.cloud",
+        "port": "8883",
+        "tls": "tls_config",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "tls_config",
+        "type": "tls-config",
+        "name": "HiveMQ TLS",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "00abc31a42b94a7ea56216cf0b5b956d.s1.eu.hivemq.cloud",
+        "verifyservercert": true,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "ui_group",
+        "type": "ui_group",
+        "name": "Control",
+        "tab": "ui_tab",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "ui_tab",
+        "type": "ui_tab",
+        "name": "Bottle Classifier",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "ui_button_trigger",
+        "type": "ui_button",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "group": "ui_group",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Capture & Classify",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "start",
+        "payloadType": "str",
+        "topic": "bottle/command",
+        "topicType": "str",
+        "x": 170,
+        "y": 280,
+        "wires": [
+            [
+                "mqtt_out_cmd"
+            ]
+        ]
+    },
+    {
+        "id": "ui_text_result",
+        "type": "ui_text",
+        "z": "f6f2187d.f17ca8",
+        "group": "ui_group",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Result",
+        "format": "{{msg.payload.class_id}} (Conf: {{msg.payload.confidence | number:2}})",
+        "layout": "row-spread",
+        "x": 400,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "json_parser",
+        "type": "json",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 290,
+        "y": 120,
+        "wires": [
+            [
+                "d4b2a1f1.123456",
+                "ui_text_result"
+            ]
+        ]
+    }
+]
