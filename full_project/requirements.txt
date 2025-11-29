@@ -1,0 +1,5 @@
+opencv-python
+onnxruntime
+paho-mqtt<2.0.0
+numpy
+RPi.GPIO

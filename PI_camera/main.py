@@ -96,15 +96,21 @@ def process_cycle(client):
         class_id = np.argmax(probs)
         confidence = probs[class_id]
         
-        result = {
+        # Class mapping
+        class_names = {0: "Correct", 1: "Misaligned", 2: "No Label"}
+        class_name = class_names.get(class_id, "Unknown")
+
+        print(f"Classification Result: {class_name} ({class_id}), Confidence: {confidence:.2f}")
+        
+        # Publish result
+        result_payload = {
             "class_id": int(class_id),
+            "class_name": class_name,
             "confidence": float(confidence),
-            "raw_probs": probs.tolist(),
+            "raw_probs": [float(p) for p in probs],
             "timestamp": time.time()
         }
-        
-        print(f"Classification Result: {result}")
-        client.publish(MQTT_TOPIC_RESULT, json.dumps(result))
+        client.publish(MQTT_TOPIC_RESULT, json.dumps(result_payload))
         print(f"Published to {MQTT_TOPIC_RESULT}")
 
     except Exception as e:
@@ -115,6 +121,8 @@ def on_connect(client, userdata, flags, rc):
         print("Connected to MQTT Broker!")
         client.subscribe(MQTT_TOPIC_COMMAND)
         print(f"Subscribed to {MQTT_TOPIC_COMMAND}")
+        client.publish("bottle/status", "online")
+        print("Published 'online' to bottle/status")
     else:
         print(f"Failed to connect, return code {rc}")
 
@@ -131,6 +139,7 @@ def main():
     
     client.on_connect = on_connect
     client.on_message = on_message
+    client.enable_logger()  # Enable logging for debugging
 
     print(f"Connecting to {MQTT_BROKER}...")
     try:
