@@ -1,6 +1,21 @@
-/.venv
-/MQTT_English_Points.pdf
-/Photos .zip
-/RaspberryPi5_and_Camera_Details.pdf
-/System_Components_Detailed_Description.pdf
-/bottle classification.v2-version-2.folder.zip
+
+# System
+.DS_Store
+.venv
+__pycache__
+
+# Condensed files
+*.zip
+*.tar.gz
+*.rar
+
+# Datasets
+bottle classification*/
+bottle_classification/
+correctly_labeled/
+no_label/
+datasets/
+data/
+
+# Training runs (optional but recommended to avoid clutter)
+runs/
