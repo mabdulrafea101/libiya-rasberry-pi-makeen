@@ -19,3 +19,4 @@ data/
 
 # Training runs (optional but recommended to avoid clutter)
 runs/
+bottle_classification_augmented/
